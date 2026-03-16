@@ -1,6 +1,5 @@
-const path = require("path");
-require("dotenv").config({ path: path.join(__dirname, ".env") });
-
+// server.js
+require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
@@ -10,21 +9,19 @@ const bookingsRouter = require("./routes/bookings");
 
 const app = express();
 
-// Middleware
 app.use(
   cors({
-    origin: ["https://harmonious-concha-12cd95.netlify.app"],
+    origin: [process.env.CORS_ORIGIN || "http://localhost:3000"],
     credentials: true,
   })
 );
+
 app.use(express.json());
 
-// Health check
 app.get("/", (req, res) => {
   res.json({ status: "ok", message: "Event Manager API running" });
 });
 
-// Routes
 app.use("/api/products", productsRouter);
 app.use("/api/bookings", bookingsRouter);
 
@@ -32,7 +29,7 @@ const PORT = process.env.PORT || 5000;
 const MONGODB_URI = process.env.MONGODB_URI;
 
 if (!MONGODB_URI) {
-  console.error("❌ Missing MONGODB_URI in backend/.env");
+  console.error("❌ Missing MONGODB_URI in .env");
   process.exit(1);
 }
 
@@ -45,6 +42,6 @@ mongoose
     });
   })
   .catch((err) => {
-    console.error("❌ MongoDB connection error:", err.message);
+    console.error("❌ MongoDB connection error:", err);
     process.exit(1);
   });
