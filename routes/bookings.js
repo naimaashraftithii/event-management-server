@@ -1,5 +1,5 @@
 const express = require("express");
-const Booking = require("../models/booking"); // ✅ lowercase file name
+const Booking = require("../models/Booking"); // ✅ lowercase file name
 
 const router = express.Router();
 
