@@ -1,16 +1,11 @@
 const express = require("express");
-const Booking = require("../models/Booking");
+const Booking = require("../models/booking"); // ✅ lowercase file name
 
 const router = express.Router();
 
-/**
- * GET /api/bookings
- * Optional: ?userEmail=someone@email.com
- */
 router.get("/", async (req, res) => {
   try {
     const { userEmail } = req.query;
-
     const filter = {};
     if (userEmail) filter.userEmail = userEmail;
 
@@ -22,10 +17,6 @@ router.get("/", async (req, res) => {
   }
 });
 
-/**
- * POST /api/bookings
- * Creates a booking from frontend payload
- */
 router.post("/", async (req, res) => {
   try {
     const b = req.body;
@@ -53,10 +44,6 @@ router.post("/", async (req, res) => {
   }
 });
 
-/**
- * PATCH /api/bookings/:id
- * Example: { status: "confirmed" }
- */
 router.patch("/:id", async (req, res) => {
   try {
     const { status } = req.body;
@@ -65,12 +52,7 @@ router.patch("/:id", async (req, res) => {
       return res.status(400).json({ message: "Invalid status" });
     }
 
-    const updated = await Booking.findByIdAndUpdate(
-      req.params.id,
-      { ...req.body },
-      { new: true }
-    );
-
+    const updated = await Booking.findByIdAndUpdate(req.params.id, req.body, { new: true });
     if (!updated) return res.status(404).json({ message: "Booking not found" });
     res.json(updated);
   } catch (err) {
@@ -79,9 +61,6 @@ router.patch("/:id", async (req, res) => {
   }
 });
 
-/**
- * DELETE /api/bookings/:id
- */
 router.delete("/:id", async (req, res) => {
   try {
     const deleted = await Booking.findByIdAndDelete(req.params.id);
